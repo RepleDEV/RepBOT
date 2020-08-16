@@ -1,29 +1,42 @@
 const Discord = require('discord.js');
-const bot = new Discord.Client();
+const fs = require("fs").promises;
+const path = require("path");
 
-const token = 'NjU2NDUxMjg5ODk0NDg2MDE2.XpQMag.V49etJWwH_gOuaFmadN1QnvhX7o';
+var bot_options;
+(async () => {
+    await fs.readFile(
+        path.join(__dirname, "/settings/settings.json"), 
+        {encoding: "utf-8"}
+    )
+    .then(data => bot_options = JSON.parse(data).bot)
+    .catch(console.error);
 
-const PREFIX = "->";
+    const bot = new Discord.Client();
 
-bot.on('ready', () => {
-    console.log(`Bot started! Logged in as ${bot.user.tag}`);
-})
+    const token = bot_options.token;
 
-bot.on('message', msg => {
-    let args = msg.content.substring(PREFIX.length).split(" ")
-    
-    switch (args[0]) {
-        // case 'greet':
-        //     let author = msg.author;
-        //     msg.channel.send(`Hello there ${author}`);
-        //     break;
-        // case 'spin':
-        //     var rng = Math.floor(Math.random() * 100);
-        //     msg.channel.send("Spinning!");
-        //     setTimeout(() => msg.channel.send(" Spun " + rng + "!"), 3000);
-        case "support":
-            
-    }
-})
+    const PREFIX = bot_options.prefix.default;
 
-bot.login(token);
+    bot.on('ready', () => {
+        console.log(`Bot started! Logged in as ${bot.user.tag}`);
+    })
+
+    bot.on('message', msg => {
+        if (!msg.content.startsWith(PREFIX) || msg.author.bot)return;
+
+        let cmds = msg.content
+        .substring(PREFIX.length)
+        .split(";")
+        .map(x => x.split(" ").map(y => y.toLowerCase()));
+
+        cmds.forEach(args => {
+            switch (args[0]) {
+                case "ping": 
+                    msg.channel.send("pong!");
+                    break;
+            }
+        });
+    })
+
+    bot.login(token);
+})();
