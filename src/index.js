@@ -1,9 +1,13 @@
 const Discord = require('discord.js');
 const fs = require("fs").promises;
 const path = require("path");
+const db = require("./database/database");
+
+require("dotenv").config();
 
 var bot_options;
 (async () => {
+
     await fs.readFile(
         path.join(__dirname, "/settings/settings.json"), 
         {encoding: "utf-8"}
@@ -13,7 +17,11 @@ var bot_options;
 
     const bot = new Discord.Client();
 
-    const token = bot_options.token;
+    const token = process.env.APP_KEY;
+    if (!token) {
+        console.log("NO TOKEN. CANCELLING");
+        process.exit(0);
+    }
 
     const PREFIX = bot_options.prefix.default;
 

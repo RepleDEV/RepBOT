@@ -9,6 +9,8 @@
   "author": "Rep_Gonpachiro",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.1.1"
+    "discord.js": "^12.1.1",
+    "dotenv": "^8.2.0",
+    "mysql": "^2.18.1"
   }
 }
