@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const fs = require("fs").promises;
 const path = require("path");
-const db = require("./database/database");
+const mysql = require("mysql");
 
 require("dotenv").config();
 
