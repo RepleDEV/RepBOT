@@ -45,11 +45,17 @@ var bot_options;
         .split(";")
         .map(x => x.split(" ").map(y => y.toLowerCase()));
 
-        cmds.forEach(args => {
+        cmds.forEach(async args => {
             switch(args[0]) {
                 case "get":
                     let res = Math.floor(Math.random() * 500) + 1;
-                    msg.channel.send(res);
+                    await currency_controller.addCurrency({
+                        user_id:msg.author.id,
+                        value: res
+                    });
+                    let currentBal;
+                    await currency_controller.get_row_by_user_id(msg.author.id).then(res => currentBal = res[0].value).catch(console.error);
+                    msg.channel.send(`Added **${res}** coins to your balance! Current balance: **${currentBal}**`);
                     break;
             }
         });
