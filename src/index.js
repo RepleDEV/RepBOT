@@ -3,6 +3,9 @@ const fs = require("fs").promises;
 const path = require("path");
 const db = require("./database/database");
 const cmds = require("./modules/commands");
+const migrate = require('./scripts/migrate');
+
+const currency_controller = require("./database/controllers/currency_controller");
 
 require("dotenv").config();
 
@@ -10,8 +13,9 @@ const bot = new Discord.Client();
 
 var bot_options;
 (async () => {
-    console.log("Migrating...!");
-    await db.migrate().catch(console.error);
+    await migrate.checkMigrated().then(isMigrated => {
+        if (!isMigrated)console.log("Database not migrated! (This may cause problems)");
+    }).catch(console.error)
 
     await fs.readFile(
         path.join(__dirname, "/settings/settings.json"), 
@@ -43,7 +47,10 @@ var bot_options;
 
         cmds.forEach(args => {
             switch(args[0]) {
-                
+                case "get":
+                    let res = Math.floor(Math.random() * 500) + 1;
+                    msg.channel.send(res);
+                    break;
             }
         });
     })
