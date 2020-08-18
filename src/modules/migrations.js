@@ -11,4 +11,6 @@ var db = mysql.createConnection({
     database: process.env.DB_NAME
 });
 
-function createTable(name, )
+function createTable(name, fields) {
+    
+}

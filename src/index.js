@@ -5,9 +5,15 @@ const mysql = require("mysql");
 
 require("dotenv").config();
 
+var db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
+
 var bot_options;
 (async () => {
-
     await fs.readFile(
         path.join(__dirname, "/settings/settings.json"), 
         {encoding: "utf-8"}
@@ -19,8 +25,7 @@ var bot_options;
 
     const token = process.env.APP_KEY;
     if (!token) {
-        console.log("NO TOKEN. CANCELLING");
-        process.exit(0);
+        throw "NO TOKEN PROVIDED. CANCELLING";
     }
 
     const PREFIX = bot_options.prefix.default;
@@ -41,6 +46,17 @@ var bot_options;
             switch (args[0]) {
                 case "ping": 
                     msg.channel.send("pong!");
+                    break;
+                case "give":
+                    break;
+                case "debug":
+                    db.connect(err => {
+                        if (err)throw err;
+                        db.query("SELECT * FROM currency", (err, res) => {
+                            if (err)throw err;
+                            msg.channel.send("Result: " + res);
+                        });
+                    });
                     break;
             }
         });
