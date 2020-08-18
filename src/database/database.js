@@ -1,33 +1,21 @@
 "use strict";
 
-const mysql = require("mysql");
+var normalizedPath = require("path").join(__dirname, "migrations");
 
-require("dotenv").config();
+async function migrate() {
+    var dirs;
+    await require("fs").promises.readdir(normalizedPath).then(res => dirs = res).catch(console.error);
 
-var db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
-
-function init() {
-    require("./migrations/create_currency_table").create();
-}
-
-function query(query) {
-    
-    var rt;
-    db.connect(err => {
-        if (err)throw err;
-        db.query(query, (err, res) => {
-            if (err)throw err;
-            rt = res;
+    return new Promise((resolve, reject) => {
+        dirs.forEach(async file => {
+            try {
+                await require("./migrations/" + file).create();
+            } catch (err) {
+                reject(err);
+            }
         });
+        resolve(true);
     });
-    return "Result: " + rt;
 }
 
-
-exports.init = init;
-exports.query = query;
+exports.migrate = migrate;
