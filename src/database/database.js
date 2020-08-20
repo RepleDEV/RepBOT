@@ -27,7 +27,8 @@ function showTables() {
 
         db.query("SHOW TABLES", (err, res) => {
             if (err)reject(err);
-            if (res.length == 0)return resolve([""]);
+
+            if (typeof res == "undefined" || res.length == 0)return resolve([""]);
             resolve(res[0].Tables_in_nodejs_repbot.split(" "));
         });
     });
@@ -73,6 +74,36 @@ async function migrate_all() {
     });
 }
 
+async function remigrate() {
+    var hasMigrated;
+    await require("../modules/migrations").checkMigrated().then(res => hasMigrated = res).catch(console.error);
+
+    if (!hasMigrated) {
+        console.log("MIGRATING...")
+        await migrate_all().catch(console.error);
+        console.log("MIGRATE SUCCESS. EXITING...")
+        return process.exit(0);
+    }
+
+    var tables;
+    await showTables().then(res => tables = res).catch(console.error);
+
+    var query = "DROP TABLE "
+    tables.forEach((table, i) => {
+        query += table;
+        query += i < tables.length - 1 ? ", " : ";";
+    });
+
+    console.log("DELETING TABLES...")
+    await this.query(query).catch(console.error);
+
+    console.log("MIGRATING...")
+    await migrate_all().catch(console.error);
+    console.log("MIGRATE SUCCESS. EXITING...")
+    return process.exit(0);
+}
+
 exports.migrate = migrate_all;
 exports.showTables = showTables;
 exports.query = query;
+exports.remigrate = remigrate;

@@ -2,6 +2,9 @@
     "bot": {
         "prefix": {
             "default": "$"
+        },
+        "max_chain": {
+            "default": 5
         }
     }
 }

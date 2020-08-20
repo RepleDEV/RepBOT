@@ -2,10 +2,12 @@
   "name": "repbot_discordbot",
   "version": "1.0.0",
   "description": "Quarantine Project I guess :D",
-  "main": "src/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "start": "nodemon ./src/index.js",
-    "migrate": "node -e \"require('./src/database/database').migrate()\""
+    "migrate": "node -e \"require('./src/database/database').migrate()\"",
+    "remigrate": "node -e \"require('./src/database/database').remigrate()\"",
+    "check_migration": "node -e \"require('./src/modules/migrations').checkMigrated().then(res => {console.log(res);process.exit()})\""
   },
   "author": "Rep_Gonpachiro",
   "license": "ISC",

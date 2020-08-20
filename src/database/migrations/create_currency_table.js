@@ -6,7 +6,8 @@ async function create() {
     return await migrations.createTable(table_name, {
         id: "INT AUTO_INCREMENT PRIMARY KEY",
         user_id: "BIGINT",
-        value: "BIGINT"
+        value: "BIGINT DEFAULT 0",
+        last_get: "BIGINT DEFAULT 0"
     });
 }
 
