@@ -1,32 +1,65 @@
 import * as fs from "fs/promises";
 import * as path from "path";
 import { getCurrentDate } from "./sub-functions";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 class Log {
-    static async write(msg: any): Promise<void> {
-        await fs.mkdir(path.join(__dirname, "../../log/")).catch((err) => {
-            // Catch the error so that it doesn't kill the program
-        });
+    static async write(msg: any, write?: any): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            fs.mkdir(path.join(__dirname, "../../log/")).catch((err) => {
+                if (err.code != "EEXIST") {
+                    reject(err);
+                }
+            });
+            const curdate = getCurrentDate("_");
+            if (write === undefined) {
+                await fs.appendFile(
+                    path.join(__dirname, `../../log/${curdate + ".log"}`),
+                    msg + "\n"
+                );
+            } else {
+                await fs.appendFile(
+                    path.join(__dirname, `../../log/${curdate + ".log"}`),
+                    write + "\n"
+                );
+            }
 
-        const curdate = getCurrentDate("_");
-        await fs.appendFile(
-            path.join(__dirname, `../../log/${curdate + ".log"}`),
-            msg + "\n"
-        );
-        console.log(msg);
+            if (process.env.DEBUG.toUpperCase() == "TRUE") {
+                console.log(msg);
+            }
+            resolve();
+        });
     }
     static async clearDir(): Promise<void> {
-        let dir;
-
-        try {
-            dir = await this.getLogDir();
-        } catch (err) {
-            return;
-        }
-
-        for (const file of dir) {
-            fs.unlink(path.join(__dirname, `../../log/${file}`));
-        }
+        return new Promise((resolve, reject) => {
+            this.getLogDir()
+                .then((dir) => {
+                    for (const file of dir) {
+                        fs.unlink(path.join(__dirname, `../../log/${file}`));
+                    }
+                    resolve();
+                })
+                .catch(reject);
+        });
+    }
+    static async deleteFile(file: string): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            this.getLogDir()
+                .then((dir) => {
+                    if (dir.includes(file)) {
+                        if (!file.endsWith(".log")) {
+                            file += ".log";
+                        }
+                        fs.unlink(path.join(__dirname, `../../log/${file}`));
+                    } else {
+                        reject("No file found!");
+                    }
+                    resolve();
+                })
+                .catch(reject);
+        });
     }
     static getLogDir(): Promise<Array<string>> {
         return new Promise(async (resolve, reject) => {
