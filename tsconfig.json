@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "allowJs": true,
+        "removeComments": true,
+        "baseUrl": ".",
+        "outDir": "out/",
+        "target": "ESNext",
+        "types": ["node"],
+        "moduleResolution": "node"
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+}

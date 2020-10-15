@@ -1,0 +1,8 @@
+{
+    "prefix": {
+        "default": "rb."
+    },
+    "restore": {
+        "limit": 10
+    }
+}
