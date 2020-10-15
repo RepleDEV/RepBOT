@@ -2,6 +2,7 @@ import * as Discord from "discord.js";
 import * as mathjs from "mathjs";
 import { Log } from "./log";
 import * as chalk from "chalk";
+import { Encryption } from "./sub-functions";
 
 const chalkDefaultColor = chalk.rgb(35, 247, 169);
 const chalkSecondaryColor = chalk.rgb(35, 247, 84);
@@ -34,13 +35,13 @@ class Command {
                     );
                 } catch (error) {
                     msg.channel.send("Calc error: Syntax error");
-                }
-                await Log.write(
-                    chalkDefaultColor(
-                        "Command issue error: Syntax error. Command issued: calc. AuthorID: "
-                    ) + chalkSecondaryColor(msg.author.id),
-                    `Command issue error: Syntax error. Command issued: calc. AuthorID: ${msg.author.id}`
-                );
+                    await Log.write(
+                        chalkDefaultColor(
+                            "Command issue error: Syntax error. Command issued: calc. AuthorID: "
+                        ) + chalkSecondaryColor(msg.author.id),
+                        `Command issue error: Syntax error. Command issued: calc. AuthorID: ${msg.author.id}`
+                    );
+                }                
                 break;
             case "log":
                 if (msg.member.hasPermission("ADMINISTRATOR")) {
@@ -95,6 +96,50 @@ class Command {
                     }ms\`. WebAPI latency: \`${Math.round(bot.ws.ping)}ms\`.`
                 );
                 Log.write(`Command issued: ping. AuthorID: ${msg.author.id}`);
+                break;
+            case "encrypt":
+                switch (args[0]) {
+                    case "rail":
+                        if (args[1] != "fence")break;
+
+                        if (args.length < 2) {
+                            msg.channel.send("Bruh u needa encrypt something smh");
+                            break;
+                        }
+
+                        msg.channel.send(`Encryption results: \`${Encryption.encryptRailFenceCipher(args.splice(2).join(" "))}\``);
+                        break;
+                    default:
+                        msg.channel.send("Bruh u gotta specify the encryption method. Try again maybe. \n||Btw we only got `rail fence` as our only encryption AND decryption method. sooooo||");
+                        break;
+                }
+                break;
+            case "decrypt":
+                switch (args[0]) {
+                    case "rail":
+                        if (args[1] != "fence")break;
+
+                        if (args.length < 2) {
+                            msg.channel.send("Bruh u needa encrypt something smh");
+                            break;
+                        }
+
+                        msg.channel.send(`Decryption results: \`${Encryption.decryptRailFenceCipher(args.splice(2).join(" "))}\``)
+                        break;
+                    default:
+                        msg.channel.send("Bruh u gotta specify the decryption method. Try again maybe. \n||Btw we only got `rail fence` as our only encryption AND decryption method. sooooo||");
+                        break;
+                }
+                break;
+            case "help":
+                msg.channel.send(
+                    "|                   === **REPBOT HELP** ===                |" + "\n" +
+                    "|                                                          |" + "\n" +
+                    "| **CALC** >> Calculate math!                              |" + "\n" +
+                    "| **PING** >> Measure latency and/or performance!          |" + "\n" +
+                    "| **ENCRYPT** >> Encryption! Available encryption methods: |" + "\n" +
+                    "|                > Rail Fence                              |" + "\n"
+                );
                 break;
         }
 
