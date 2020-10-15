@@ -31,7 +31,7 @@ const bot = new Discord.Client();
     });
 
     bot.on("message", async (msg) => {
-        if (listening.length > 0) { 
+        if (listening.length > 0) {
             const del: Array<number> = [];
             for (let i = 0; i < listening.length; i++) {
                 const { id, cmd } = listening[0];

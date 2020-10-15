@@ -10,7 +10,7 @@
         "watch": "tsc -w",
         "lint": "eslint . ",
         "prettier": "prettier --write .",
-        "postinstall": "npm run build && npm run prettify && npm run lint",
+        "postinstall": "npm run build && npm run prettier && npm run lint",
         "prestart": "npm run build"
     },
     "author": "RepleDEV",
