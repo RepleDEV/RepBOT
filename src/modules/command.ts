@@ -29,14 +29,16 @@ class Command {
                     msg.channel.send(`Result: ${mathEval}`);
                     await Log.write(
                         chalkDefaultColor("Command issued: calc. AuthorID: ") +
-                        chalkSecondaryColor(msg.author.id),
+                            chalkSecondaryColor(msg.author.id),
                         `Command issued: calc. AuthorID: ${msg.author.id}.`
                     );
                 } catch (error) {
                     msg.channel.send("Calc error: Syntax error");
                 }
                 await Log.write(
-                    chalkDefaultColor("Command issue error: Syntax error. Command issued: calc. AuthorID: ") + chalkSecondaryColor(msg.author.id),
+                    chalkDefaultColor(
+                        "Command issue error: Syntax error. Command issued: calc. AuthorID: "
+                    ) + chalkSecondaryColor(msg.author.id),
                     `Command issue error: Syntax error. Command issued: calc. AuthorID: ${msg.author.id}`
                 );
                 break;
@@ -48,7 +50,9 @@ class Command {
                                 await Log.clearDir();
                                 msg.channel.send("Cleared logs");
                                 Log.write(
-                                    chalkDefaultColor("Command issued: log clearall. AuthorID: ") + chalkSecondaryColor(msg.author.id),
+                                    chalkDefaultColor(
+                                        "Command issued: log clearall. AuthorID: "
+                                    ) + chalkSecondaryColor(msg.author.id),
                                     `Command issued: log clearall. AuthorID: ${msg.author.id}.`
                                 );
                             } else {
