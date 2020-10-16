@@ -203,10 +203,17 @@ class Command {
                 } else {
                     const minNum = parseInt(args[0]);
                     const maxNum = parseInt(args[1]);
+
                     if (isNaN(minNum)|| isNaN(maxNum)) {
                         msg.channel.send("Aruments must be a number.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`.");
                         break;
                     }
+
+                    if (minNum >= maxNum) {
+                        msg.channel.send("Minimum and maximum numbers cannot be the same and minimum must be smaller than the maximum!\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`.");
+                        break;
+                    }
+
                     const rng = Random.integer(minNum, maxNum);
                     msg.channel.send(`RNG Results: \`${rng}\`.`)
                 }
