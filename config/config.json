@@ -4,5 +4,10 @@
     },
     "restore": {
         "limit": 10
+    },
+    "log": {
+        "allowedUsers": [
+            246789625715228672
+        ]
     }
 }
