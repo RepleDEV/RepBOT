@@ -5,6 +5,7 @@ import * as chalk from "chalk";
 import { Encryption, Random } from "./sub-functions";
 import { promises as fs } from "fs";
 import * as path from "path";
+import * as _ from "lodash";
 
 // Chalk stdout colors
 const chalkDefaultColor = chalk.rgb(35, 247, 169);
@@ -116,6 +117,15 @@ class Command {
                             }
                             break;
                         case "view":
+                            // const logDir = await Log.getLogDir();
+                            // const list = logDir.map((val, i) => `${i + 1}. ${val}`).join("\n");
+                            // msg.channel.send(`Which file do you want to view?\n\n\`${list}\`.\n Answer with the index of the file that you want to view.`);
+                            // listening.push({
+                            //     id: msg.author.id,
+                            //     cmd(msg: Discord.Message) {
+                                    
+                            //     }
+                            // });
                             break;
                     }
                 } else {
@@ -216,6 +226,21 @@ class Command {
 
                     const rng = Random.integer(minNum, maxNum);
                     msg.channel.send(`RNG Results: \`${rng}\`.`)
+                }
+                break;
+            case "str":
+                if (args.length < 2) {
+                    msg.channel.send("Syntax error: \n\nSyntax: `rb.str <method> <string>`.");
+                    break;
+                }
+                switch (args[0]) {
+                    case "flip":
+                        msg.channel.send(`String Flip: \`${args.slice(1).join(" ").split("").reverse().join("")}\`.`);
+                        break;
+                    case "scramble":
+                        const str = args.slice(1).join(" ");
+                        msg.channel.send(`String Scramble: \`${_.shuffle(str).join("")}\``)
+                        break;
                 }
                 break;
             case "help":
