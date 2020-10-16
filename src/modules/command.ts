@@ -2,7 +2,7 @@ import * as Discord from "discord.js";
 import * as mathjs from "mathjs";
 import { Log } from "./log";
 import * as chalk from "chalk";
-import { Encryption } from "./sub-functions";
+import { Encryption, Random } from "./sub-functions";
 import { promises as fs } from "fs";
 import * as path from "path";
 
@@ -185,6 +185,30 @@ class Command {
                             "Bruh u gotta specify the decryption method. Try again maybe. \n||Btw we only got `rail fence` as our only encryption AND decryption method. sooooo||"
                         );
                         break;
+                }
+                break;
+            case "rng":
+                if (!args.length) {
+                    msg.channel.send("You need to specify how big your number can be.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`.");
+                    break;
+                }
+                if (args.length == 1) {
+                    const maxNum = parseInt(args[0])
+                    if (isNaN(maxNum)) {
+                        msg.channel.send("Aruments must be a number.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`.");
+                        break;
+                    }
+                    const rng = Random.integer(1, maxNum);
+                    msg.channel.send(`RNG Results: \`${rng}\`.`)
+                } else {
+                    const minNum = parseInt(args[0]);
+                    const maxNum = parseInt(args[1]);
+                    if (isNaN(minNum)|| isNaN(maxNum)) {
+                        msg.channel.send("Aruments must be a number.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`.");
+                        break;
+                    }
+                    const rng = Random.integer(minNum, maxNum);
+                    msg.channel.send(`RNG Results: \`${rng}\`.`)
                 }
                 break;
             case "help":
