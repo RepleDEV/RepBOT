@@ -238,7 +238,7 @@ class Command {
                         msg.channel.send(`String Flip: \`${args.slice(1).join(" ").split("").reverse().join("")}\`.`);
                         break;
                     case "scramble":
-                        const str = args.slice(1).join(" ");
+                        const str = args.slice(1).join(" "); // eslint-disable-line no-case-declarations
                         msg.channel.send(`String Scramble: \`${_.shuffle(str).join("")}\``)
                         break;
                 }
