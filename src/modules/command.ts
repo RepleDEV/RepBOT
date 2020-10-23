@@ -1,6 +1,5 @@
 import * as Discord from "discord.js";
 import * as mathjs from "mathjs";
-import { Log } from "./log";
 import * as chalk from "chalk";
 import { Encryption, Random } from "./sub-functions";
 import { promises as fs } from "fs";
@@ -48,8 +47,6 @@ class Command {
         msg: Discord.Message,
         args: Array<any>
     ): Promise<string> {
-        const bot_config = JSON.parse(await fs.readFile(path.join(__dirname, "../../config/config.json"), {encoding: "utf-8"}));
-
         switch (command) {
             /**
              * Calculate math
@@ -59,71 +56,8 @@ class Command {
                 try {
                     const mathEval = mathjs.evaluate(args.join(""));
                     msg.channel.send(`Result: ${mathEval}`);
-                    await Log.write(
-                        chalkDefaultColor("Command issued: calc. AuthorID: ") +
-                        chalkSecondaryColor(msg.author.id),
-                        `Command issued: calc. AuthorID: ${msg.author.id}.`
-                    );
                 } catch (error) {
                     msg.channel.send("Calc error: Syntax error");
-                    await Log.write(
-                        chalkDefaultColor(
-                            "Command issue error: Syntax error. Command issued: calc. AuthorID: "
-                        ) + chalkSecondaryColor(msg.author.id),
-                        `Command issue error: Syntax error. Command issued: calc. AuthorID: ${msg.author.id}`
-                    );
-                }
-                break;
-            /**
-             * Bot logging controll
-             */
-            case "log":
-                if (bot_config.log.allowedUsers.includes(parseInt(msg.author.id))) {
-                    switch (args[0]) {
-                        case "clearall":
-                            // Checks if the arguments includes the flags "-y" or "--yes"
-                            if (args.includes("-y") || args.includes("--yes")) {
-                                await Log.clearDir();
-                                msg.channel.send("Cleared logs");
-                                Log.write(
-                                    chalkDefaultColor(
-                                        "Command issued: log clearall. AuthorID: "
-                                    ) + chalkSecondaryColor(msg.author.id),
-                                    `Command issued: log clearall. AuthorID: ${msg.author.id}.`
-                                );
-                            } else {
-                                msg.channel.send(
-                                    "Please confirm by replying with `y`."
-                                );
-                                listening.push({
-                                    id: msg.author.id,
-                                    cmd: (m: Discord.Message) => {
-                                        if (
-                                            m.content == "y" ||
-                                            m.content == "yes"
-                                        ) {
-                                            Command.exec("log", bot, msg, [
-                                                "clearall",
-                                                "-y",
-                                            ]);
-                                        }
-                                    },
-                                });
-                                Log.write(
-                                    chalkDefaultColor("Command listener added: log clearall. AuthorID: ") + chalkSecondaryColor(msg.author.id),
-                                    `Command listener added: log clearall. AuthorID: ${msg.author.id}.`
-                                );
-                            }
-                            break;
-                        case "view":
-                            break;
-                    }
-                } else {
-                    msg.channel.send("Error: non-admin");
-                    Log.write(
-                        chalkDefaultColor("Command issue error: non-admin. Command issued: log clearall. AuthorID: ") + chalkSecondaryColor(msg.author.id),
-                        `Command issue error: non-admin. Command issued: log clearall. AuthorID: ${msg.author.id}.`
-                    );
                 }
                 break;
             case "ping":
@@ -131,10 +65,6 @@ class Command {
                     `Ping! \`${
                         Date.now() - msg.createdTimestamp
                     }ms\`. WebAPI latency: \`${Math.round(bot.ws.ping)}ms\`.`
-                );
-                Log.write(
-                    chalkDefaultColor("Command issued: ping. AuthorID: ") + chalkSecondaryColor(msg.author.id),
-                    `Command issued: ping. AuthorID: ${msg.author.id}`
                 );
                 break;
             case "encrypt":

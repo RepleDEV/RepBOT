@@ -2,7 +2,7 @@ import * as Discord from "discord.js";
 import { promises as fs } from "fs";
 import * as path from "path";
 import * as dotenv from "dotenv";
-import { functions, Command, listening, Log } from "./modules";
+import { functions, Command, listening } from "./modules";
 import * as chalk from "chalk";
 
 // Chalk stdout colors
@@ -34,26 +34,8 @@ const bot = new Discord.Client();
     // Get prefix from the bot config
     const prefix = bot_config.prefix.default;
 
-    // Write to log: new session
-    Log.write(
-        chalkDefaultColor("[Session: ") +
-            chalkSecondaryColor`${Date.now()} | ${getCurrentDate()}` +
-            chalkDefaultColor("]"),
-        `[Session: ${Date.now()} | ${getCurrentDate()}]`
-    );
-    Log.write(
-        chalkDefaultColor("Starting with prefix: ") +
-            chalkSecondaryColor(prefix),
-        `Starting with prefix: ${prefix}.`
-    );
-
     bot.on("ready", () => {
-        // Write to log that the bot's ready
-        Log.write(
-            chalkDefaultColor("Bot started. Logged in as: ") +
-                chalkSecondaryColor(bot.user.tag),
-            `Bot started. Logged in as: ${bot.user.tag}`
-        );
+        console.log("Started BOT");
     });
 
     bot.on("message", async (msg) => {
