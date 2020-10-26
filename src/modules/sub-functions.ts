@@ -70,4 +70,29 @@ class Random {
     }
 }
 
-export { getCurrentDate, Encryption, Random };
+class BlackjackDeck {
+    player1: Array<any>;
+    player2: Array<any>;
+    constructor() {
+        const cTypes = ["C", "D", "H", "S"];
+        const cValues = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+        for (let i = 0;i < 3;i++) {
+            for (let j = 0;j < 2;j++) {
+                const randTypeIndex = Math.floor(Math.random() * cTypes.length);
+                const randValIndex = Math.floor(Math.random() * cValues.length);
+                this["player" + (i + 1)].push(cTypes[randTypeIndex] + cValues[randValIndex]);
+            }
+        }
+    }
+    static getCard(): string {
+        const cTypes = ["C", "D", "H", "S"];
+        const cValues = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+
+        const randTypeIndex = Math.floor(Math.random() * cTypes.length);
+        const randValIndex = Math.floor(Math.random() * cValues.length);
+
+        return cTypes[randTypeIndex] + cValues[randValIndex];
+    }
+}
+
+export { getCurrentDate, Encryption, Random, BlackjackDeck };

@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations */
+
 import * as Discord from "discord.js";
 import * as mathjs from "mathjs";
 import { Log } from "./log";
@@ -49,7 +51,12 @@ class Command {
         msg: Discord.Message,
         args: Array<any>
     ): Promise<string> {
-        const bot_config = JSON.parse(await fs.readFile(path.join(__dirname, "../../config/config.json"), {encoding: "utf-8"}));
+        const bot_config = JSON.parse(
+            await fs.readFile(
+                path.join(__dirname, "../../config/config.json"),
+                { encoding: "utf-8" }
+            )
+        );
 
         switch (command) {
             /**
@@ -62,7 +69,7 @@ class Command {
                     msg.channel.send(`Result: ${mathEval}`);
                     await Log.write(
                         chalkDefaultColor("Command issued: calc. AuthorID: ") +
-                        chalkSecondaryColor(msg.author.id),
+                            chalkSecondaryColor(msg.author.id),
                         `Command issued: calc. AuthorID: ${msg.author.id}.`
                     );
                 } catch (error) {
@@ -79,7 +86,11 @@ class Command {
              * Bot logging controll
              */
             case "log":
-                if (bot_config.log.allowedUsers.includes(parseInt(msg.author.id))) {
+                if (
+                    bot_config.log.allowedUsers.includes(
+                        parseInt(msg.author.id)
+                    )
+                ) {
                     switch (args[0]) {
                         case "clearall":
                             // Checks if the arguments includes the flags "-y" or "--yes"
@@ -111,7 +122,9 @@ class Command {
                                     },
                                 });
                                 Log.write(
-                                    chalkDefaultColor("Command listener added: log clearall. AuthorID: ") + chalkSecondaryColor(msg.author.id),
+                                    chalkDefaultColor(
+                                        "Command listener added: log clearall. AuthorID: "
+                                    ) + chalkSecondaryColor(msg.author.id),
                                     `Command listener added: log clearall. AuthorID: ${msg.author.id}.`
                                 );
                             }
@@ -123,7 +136,7 @@ class Command {
                             // listening.push({
                             //     id: msg.author.id,
                             //     cmd(msg: Discord.Message) {
-                                    
+
                             //     }
                             // });
                             break;
@@ -131,7 +144,9 @@ class Command {
                 } else {
                     msg.channel.send("Error: non-admin");
                     Log.write(
-                        chalkDefaultColor("Command issue error: non-admin. Command issued: log clearall. AuthorID: ") + chalkSecondaryColor(msg.author.id),
+                        chalkDefaultColor(
+                            "Command issue error: non-admin. Command issued: log clearall. AuthorID: "
+                        ) + chalkSecondaryColor(msg.author.id),
                         `Command issue error: non-admin. Command issued: log clearall. AuthorID: ${msg.author.id}.`
                     );
                 }
@@ -143,7 +158,8 @@ class Command {
                     }ms\`. WebAPI latency: \`${Math.round(bot.ws.ping)}ms\`.`
                 );
                 Log.write(
-                    chalkDefaultColor("Command issued: ping. AuthorID: ") + chalkSecondaryColor(msg.author.id),
+                    chalkDefaultColor("Command issued: ping. AuthorID: ") +
+                        chalkSecondaryColor(msg.author.id),
                     `Command issued: ping. AuthorID: ${msg.author.id}`
                 );
                 break;
@@ -199,61 +215,83 @@ class Command {
                 break;
             case "rng":
                 if (!args.length) {
-                    msg.channel.send("You need to specify how big your number can be.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`.");
+                    msg.channel.send(
+                        "You need to specify how big your number can be.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`."
+                    );
                     break;
                 }
                 if (args.length == 1) {
-                    const maxNum = parseInt(args[0])
+                    const maxNum = parseInt(args[0]);
                     if (isNaN(maxNum)) {
-                        msg.channel.send("Aruments must be a number.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`.");
+                        msg.channel.send(
+                            "Aruments must be a number.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`."
+                        );
                         break;
                     }
                     const rng = Random.integer(1, maxNum);
-                    msg.channel.send(`RNG Results: \`${rng}\`.`)
+                    msg.channel.send(`RNG Results: \`${rng}\`.`);
                 } else {
                     const minNum = parseInt(args[0]);
                     const maxNum = parseInt(args[1]);
 
-                    if (isNaN(minNum)|| isNaN(maxNum)) {
-                        msg.channel.send("Aruments must be a number.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`.");
+                    if (isNaN(minNum) || isNaN(maxNum)) {
+                        msg.channel.send(
+                            "Aruments must be a number.\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`."
+                        );
                         break;
                     }
 
                     if (minNum >= maxNum) {
-                        msg.channel.send("Minimum and maximum numbers cannot be the same and minimum must be smaller than the maximum!\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`.");
+                        msg.channel.send(
+                            "Minimum and maximum numbers cannot be the same and minimum must be smaller than the maximum!\n\nSyntax: `rb.rng <int: minimum?> <int: maximum>`."
+                        );
                         break;
                     }
 
                     const rng = Random.integer(minNum, maxNum);
-                    msg.channel.send(`RNG Results: \`${rng}\`.`)
+                    msg.channel.send(`RNG Results: \`${rng}\`.`);
                 }
                 break;
             case "str":
                 if (args.length < 2) {
-                    msg.channel.send("Syntax error: \n\nSyntax: `rb.str <method> <string>`.");
+                    msg.channel.send(
+                        "Syntax error: \n\nSyntax: `rb.str <method> <string>`."
+                    );
                     break;
                 }
                 switch (args[0]) {
                     case "flip":
-                        msg.channel.send(`String Flip: \`${args.slice(1).join(" ").split("").reverse().join("")}\`.`);
+                        msg.channel.send(
+                            `String Flip: \`${args
+                                .slice(1)
+                                .join(" ")
+                                .split("")
+                                .reverse()
+                                .join("")}\`.`
+                        );
                         break;
                     case "scramble":
                         const str = args.slice(1).join(" "); // eslint-disable-line no-case-declarations
-                        msg.channel.send(`String Scramble: \`${_.shuffle(str).join("")}\``)
+                        msg.channel.send(
+                            `String Scramble: \`${_.shuffle(str).join("")}\``
+                        );
                         break;
                 }
+                break;
+            case "bj":
+                
                 break;
             case "help":
                 msg.channel.send(
                     "**RepBOT Help**" +
-                    "\n\n" +
-                    "**CALC** >> Calculate math!" +
-                    "\n" +
-                    "**PING** >> Measure network latency and/or performance!" +
-                    "\n" +
-                    "**ENCRYPT** >> Encryption! Available encryption methods: **Rail Fence**" +
-                    "\n" +
-                    "**DECRYPT** >> Decryption! Available decryption methods: **Rail Fence**"
+                        "\n\n" +
+                        "**CALC** >> Calculate math!" +
+                        "\n" +
+                        "**PING** >> Measure network latency and/or performance!" +
+                        "\n" +
+                        "**ENCRYPT** >> Encryption! Available encryption methods: **Rail Fence**" +
+                        "\n" +
+                        "**DECRYPT** >> Decryption! Available decryption methods: **Rail Fence**"
                 );
                 break;
         }

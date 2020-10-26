@@ -92,13 +92,13 @@ const bot = new Discord.Client();
             (msg.author.bot && listening.length == 0)
         )
             return;
-        
+
         // Get the arguments
         const args = msg.content
             .substring(prefix.length) // Remove the prefix
             .split(" ") // Split it by spaces
             .map((v) => v.toLowerCase()); // Make every word/argument lowercase
-        
+
         // Execute said commands
         await Command.exec(args[0], bot, msg, args.slice(1));
     });
