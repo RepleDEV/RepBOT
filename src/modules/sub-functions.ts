@@ -1,3 +1,7 @@
+/* eslint-disable no-case-declarations*/
+
+import * as _ from "lodash";
+
 function getCurrentDate(split = "/"): string {
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
@@ -71,27 +75,49 @@ class Random {
 }
 
 class BlackjackDeck {
-    player1: Array<any>;
-    player2: Array<any>;
+    player1: Array<any> = [];
+    player2: Array<any> = [];
     constructor() {
-        const cTypes = ["C", "D", "H", "S"];
-        const cValues = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-        for (let i = 0;i < 3;i++) {
-            for (let j = 0;j < 2;j++) {
-                const randTypeIndex = Math.floor(Math.random() * cTypes.length);
-                const randValIndex = Math.floor(Math.random() * cValues.length);
-                this["player" + (i + 1)].push(cTypes[randTypeIndex] + cValues[randValIndex]);
-            }
+        for (let i = 0; i < 2; i++) {
+            this.player1.push(BlackjackDeck.getCard());
+            this.player2.push(BlackjackDeck.getCard());
         }
     }
     static getCard(): string {
         const cTypes = ["C", "D", "H", "S"];
-        const cValues = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+        const cValues = [
+            "A",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "J",
+            "Q",
+            "K",
+        ];
 
         const randTypeIndex = Math.floor(Math.random() * cTypes.length);
         const randValIndex = Math.floor(Math.random() * cValues.length);
 
         return cTypes[randTypeIndex] + cValues[randValIndex];
+    }
+    static getValue(card: string): number {
+        if (_.isNumber(card[1])) {
+            return parseInt(card[1]);
+        } else {
+            switch (card[1]) {
+                case "A":
+                    const valueDecider = Math.random() >= 5;
+                    return valueDecider ? 1 : 11;
+                default:
+                    return 10;
+            }
+        }
     }
 }
 

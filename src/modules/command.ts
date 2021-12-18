@@ -4,7 +4,7 @@ import * as Discord from "discord.js";
 import * as mathjs from "mathjs";
 import { Log } from "./log";
 import * as chalk from "chalk";
-import { Encryption, Random } from "./sub-functions";
+import { Encryption, Random, BlackjackDeck } from "./sub-functions";
 import { promises as fs } from "fs";
 import * as path from "path";
 import * as _ from "lodash";
@@ -18,6 +18,10 @@ interface ListenerObject {
      * Message Author ID
      */
     id: any;
+    /**
+     * Message channel ID
+     */
+    messageId: any;
     /**
      * Command Callback
      */
@@ -109,7 +113,8 @@ class Command {
                                 );
                                 listening.push({
                                     id: msg.author.id,
-                                    cmd: (m: Discord.Message) => {
+                                    messageId: msg.channel.id,
+                                    cmd: (m) => {
                                         if (
                                             m.content == "y" ||
                                             m.content == "yes"
@@ -153,9 +158,9 @@ class Command {
                 break;
             case "ping":
                 msg.channel.send(
-                    `Ping! \`${
+                    `Ping! \`${Math.abs(
                         Date.now() - msg.createdTimestamp
-                    }ms\`. WebAPI latency: \`${Math.round(bot.ws.ping)}ms\`.`
+                    )}ms\`. WebAPI latency: \`${Math.round(bot.ws.ping)}ms\`.`
                 );
                 Log.write(
                     chalkDefaultColor("Command issued: ping. AuthorID: ") +
@@ -279,7 +284,34 @@ class Command {
                 }
                 break;
             case "bj":
-                
+                const deck = new BlackjackDeck();
+                const enemyCards = deck.player2;
+                const playerCards = deck.player1;
+                const playerCardValues = playerCards
+                    .map(BlackjackDeck.getValue)
+                    .reduce((total, num) => total + num);
+                msg.channel.send(
+                    `**BLACKJACK**\n\nYour cards: \`${playerCards.join(
+                        "`, `"
+                    )}. Total value: ${playerCardValues}.\`\nOpponent's Cards: ${
+                        enemyCards[0]
+                    }, ?. Total value: \`?\`.\n\n\`H\` to hit, \`S\` to stand, \`Q\` to quit.`
+                );
+
+                listening.push({
+                    id: msg.author.id,
+                    messageId: msg.channel.id,
+                    cmd(msg) {
+                        switch (msg.content.toLowerCase()) {
+                            case "s":
+                                
+                                break;
+                        
+                            default:
+                                break;
+                        }
+                    }
+                })
                 break;
             case "help":
                 msg.channel.send(

@@ -62,15 +62,19 @@ const bot = new Discord.Client();
             // Temporary deletion array.
             const del: Array<number> = [];
 
+            let doReturn = false;
+
             // For each listening command that has the same id as the message's author
             for (let i = 0; i < listening.length; i++) {
-                const { id, cmd } = listening[0];
+                const { id, messageId, cmd } = listening[0];
 
-                if (id == msg.author.id) {
+                if (id == msg.author.id && messageId == msg.channel.id) {
                     // Callback the listening function
                     cmd(msg);
                     // Push the index to the deletion array
                     del.push(i);
+
+                    doReturn = true;
                 }
             }
 
@@ -79,7 +83,9 @@ const bot = new Discord.Client();
                 listening.splice(d, 1);
             }
 
-            return;
+            if (doReturn) {
+                return;
+            }
         }
 
         /**
